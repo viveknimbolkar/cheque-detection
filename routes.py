@@ -1,7 +1,18 @@
 from __main__ import app
-from flask import render_template, render_template, request, session
+from flask import render_template, redirect, render_template, request, session
 from database import mysql
 import MySQLdb.cursors
+
+    
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/auth')
+def auth():
+    return render_template('auth.html')
+
 
 @app.route('/login',methods=['POST'])
 def login():
@@ -17,21 +28,14 @@ def login():
             session['email'] = account['email']
             session['name'] = account['name']
             msg = 'Logged in successfully!'
+            return redirect('/dashboard')
         else:
             msg = 'Incorrect username or password!'
     elif request.method == 'POST':
         msg = 'Empty fields are not allowed!'
+        
     return msg
 
-    
-@app.route('/')
-def index():
-    return render_template('header.html')
-
-
-@app.route('/auth')
-def auth():
-    return render_template('auth.html')
 
 
 @app.route('/register',methods=['POST'])
@@ -60,5 +64,19 @@ def logout():
     session.pop('loggedin',None)
     session.pop('email',None)
     session.pop('name',None)
+    return redirect('/')
     
 
+@app.route('/dashboard')
+def dashboard():
+    return 'dashboard'    
+
+
+@app.route('/dashboard/history')
+def history():
+    return 'history'
+
+
+@app.route('/dashboard/verify')
+def verify():
+    return 'verify'
