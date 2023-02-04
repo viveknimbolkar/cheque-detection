@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block head %}
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+  rel="stylesheet"
+/>
+<link rel="stylesheet" href={{
+url_for("static",filename='css/upload-cheque.css') }} /> {% endblock %} {% block
+content %}
+<div class="container">
+  <div class="d-flex justify-content-center">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <h2 class="text-center fw-bold my-4">
+        Upload a Cheque image for automatic cheque processing
+      </h2>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+  <div class="row p-2">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 main">
+      <div class="text-center mb-3">
+        <i class="fa-brands fa-dropbox"></i>
+      </div>
+
+      <input type="file" id="upload-button" multiple accept="image/*" />
+      <label for="upload-button"
+        ><i class="fa-solid fa-upload"></i>&nbsp; Upload Cheque
+      </label>
+      <div class="text-center">or Drop a file</div>
+
+      <div id="error"></div>
+      <div id="image-display" class="my-3"></div>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+
+{% endblock %} {% block jsscripts %}
+<script src={{
+    url_for("static",filename='js/upload-cheque.js') }}></script>
+{% endblock %}

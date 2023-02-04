@@ -77,6 +77,11 @@ def history():
     return 'history'
 
 
+@app.route('/dashboard/upload-cheque')
+def upload_cheque():
+    return render_template('upload-cheque.html')
+
+
 @app.route('/dashboard/verify')
 def verify():
     return 'verify'
