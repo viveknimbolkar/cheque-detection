@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% block head %} <link rel="stylesheet" href={{
+url_for("static",filename='css/sidemenu.css') }} /> <link rel="stylesheet"
+href={{ url_for("static",filename='css/history.css') }} />{% endblock %} {%
+block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
+%}
+<center class="my-4"><h3>View History</h3></center>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Bank Name</th>
+      <th scope="col">Bearer</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Is Valid</th>
+      <th scope="col">Cheque No.</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>State Bank of India</td>
+      <td>Ritik Jaiswal</td>
+      <td>50600</td>
+      <td>Yes</td>
+      <td>785623568978</td>
+      <td>23/03/2023</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>State Bank of India</td>
+      <td>Ritik Jaiswal</td>
+      <td>50600</td>
+      <td>Yes</td>
+      <td>785623568978</td>
+      <td>23/03/2023</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>State Bank of India</td>
+      <td>Ritik Jaiswal</td>
+      <td>50600</td>
+      <td>Yes</td>
+      <td>785623568978</td>
+      <td>23/03/2023</td>
+    </tr>
+    <tr>
+      <th scope="row">4</th>
+      <td>State Bank of India</td>
+      <td>Ritik Jaiswal</td>
+      <td>50600</td>
+      <td>Yes</td>
+      <td>785623568978</td>
+      <td>23/03/2023</td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %} {% block jsscripts %} {% endblock %}

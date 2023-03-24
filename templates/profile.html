@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block head %} <link rel="stylesheet" href={{
+url_for("static",filename='css/sidemenu.css') }} /> <link rel="stylesheet" href={{
+    url_for("static",filename='css/profile.css') }} />{% endblock %} {% block
+sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section %}
+
+<div>
+  <div class="my-4 d-flex justify-content-center profile-container"> 
+    <img
+      class="dashboard-user-image"
+      width="100"
+      height="100"
+      src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61"
+      alt="profile image"
+    />
+    <i class="fa-solid fa-pen-to-square fa-lg image-edit-icon"></i>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="email" class="form-label"> Email</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          placeholder="Enter email..."
+        />
+      </div>
+      <div class="mb-3">
+        <label for="name" class="form-label"> Name</label>
+        <input
+          id="name"
+          type="text"
+          class="form-control"
+          placeholder="Enter name..."
+        />
+      </div>
+      <button class="btn bg-primary text-white">Update</button>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="role" class="form-label"> Role</label>
+        <select  id="role"
+        type="text"
+        class="form-control"
+        placeholder="Enter role...">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block jsscripts %} {% endblock %}

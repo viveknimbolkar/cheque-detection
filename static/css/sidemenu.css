@@ -1,0 +1,16 @@
+.menu .list-item:hover {
+  background-color: rgb(228, 227, 227);
+}
+.list-item .list-anchor {
+  text-decoration: none;
+  width: 100%;
+  display: flex;
+}
+
+.list-item {
+  list-style-type: none;
+  cursor: pointer;
+}
+.user-image{
+    border-radius: 50%;
+}

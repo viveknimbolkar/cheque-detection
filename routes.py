@@ -69,19 +69,28 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-    return 'dashboard'    
+    return render_template('dashboard.html')
+
+
+@app.route('/dashboard/profile')
+def profile():
+    return render_template('profile.html')
+
 
 
 @app.route('/dashboard/history')
 def history():
-    return 'history'
+    return render_template('history.html')
+
+
+@app.route('/dashboard/extract')
+def extract():
+    return 'hisstory'
+
+
 
 
 @app.route('/dashboard/upload-cheque')
 def upload_cheque():
     return render_template('upload-cheque.html')
 
-
-@app.route('/dashboard/verify')
-def verify():
-    return 'verify'
