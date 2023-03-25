@@ -24,9 +24,9 @@ def login():
         cursor.execute('SELECT * FROM user WHERE email=%s AND password=%s',[email,password])
         account = cursor.fetchone()
         if account:
-            session['loggedin'] = True
             session['email'] = account['email']
             session['name'] = account['name']
+            session['role'] = account['role']
             msg = 'Logged in successfully!'
             return redirect('/dashboard')
         else:
@@ -69,12 +69,43 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    if 'email' in session:
+        print('defined')
+        return render_template('dashboard.html',)
+    else:
+        print('not defined')
+        return redirect('/',)
 
 
 @app.route('/dashboard/profile')
 def profile():
-    return render_template('profile.html')
+    if 'email' in session:
+        print('defined')
+        return render_template('profile.html',name=session['name'],email=session['email'],role=session['role'])
+    else:
+        print('not defined')
+        return redirect('/',)
+
+
+
+
+# get the profile information
+@app.route('/profile/update_user_details',methods=['POST'])
+def update_user_details():
+     msg = ''
+     if request.method == 'POST':
+        email = request.form['email']
+        role = request.form['role']
+        name = request.form['name']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE user SET  email =%s, name =%s, role=%s WHERE email=%s',(email,name,role,email))
+        mysql.connection.commit()
+        msg = 'User data updated successfully'
+        return msg
+     else:
+        msg = 'Something went wrong'
+            
+     return msg
 
 
 
