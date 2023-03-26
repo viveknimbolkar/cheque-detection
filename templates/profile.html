@@ -1,29 +1,35 @@
 {% extends 'base.html' %} {% block head %} <link rel="stylesheet" href={{
 url_for("static",filename='css/sidemenu.css') }} /> <link rel="stylesheet"
 href={{ url_for("static",filename='css/profile.css') }} />{% endblock %} {%
-block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section %}
-  <div id="userForm">
-    <div class="my-4 d-flex justify-content-center profile-container">
-      <img
-        class="dashboard-user-image"
-        width="100"
-        height="100"
-        src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61"
-        alt="profile image"
-      />
-      <i class="fa-solid fa-pen-to-square fa-lg image-edit-icon"></i>
-    </div>
+block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
+%}
+<div id="userForm">
+  <div class="my-4 d-flex justify-content-center profile-container">
+    <img
+      id="userImage"
+      class="dashboard-user-image"
+      width="100"
+      height="100"
+      alt="profile image"
+      src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+    />
 
-    <form action="/profile/update_user_details" method="post">
-      
+    <!-- <img width="100" height="100" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="profile image"/> -->
+  </div>
+
+  <form
+    action="/profile/update_user_details"
+    method="post"
+    enctype="multipart/form-data"
+  >
     <div class="row mt-4">
       <div class="col-md-2"></div>
       <div class="col-md-4">
         <div class="mb-3">
           <label for="email" class="form-label"> Email</label>
           <input
-          value="{{ email }}"
-          name="email"
+            value="{{ email }}"
+            name="email"
             id="email"
             type="email"
             class="form-control"
@@ -33,23 +39,22 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section %
         <div class="mb-3">
           <label for="name" class="form-label"> Name</label>
           <input
-          value="{{ name }}"
-          name="name"
+            value="{{ name }}"
+            name="name"
             id="name"
             type="text"
             class="form-control"
             placeholder="Enter name..."
           />
         </div>
-        <input class=" text-white btn btn-danger" type="submit" value="Update">
-        
+        <input class="text-white btn btn-danger" type="submit" value="Update" />
       </div>
       <div class="col-md-4">
         <div class="mb-3">
           <label for="role" class="form-label"> Role</label>
           <select
-          value="{{ role }}"
-          name="role"
+            value="{{ role }}"
+            name="role"
             id="role"
             type="text"
             class="form-control"
@@ -59,9 +64,28 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section %
             <option value="user">User</option>
           </select>
         </div>
+        <div class="mb-3">
+          <label for="role" class="form-label">Profile Image</label>
+          <input type="file" name="userimage" class="form-control" />
+        </div>
       </div>
     </div>
   </form>
-  </div>
-{% endblock %} 
-
+  <center>
+    <p class="text-danger">
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for
+      message in messages %} {{ message }} {% endfor %} {% endif %} {% endwith
+      %}
+    </p>
+  </center>
+</div>
+<script>
+  fetch("/get_userimage/{{ email }}")
+    .then((data) => {
+      document.getElementById("userImage").src = data.url;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+</script>
+{% endblock %}

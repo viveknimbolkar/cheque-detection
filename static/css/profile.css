@@ -5,12 +5,7 @@
     border-radius: 50%;
 }
 .dashboard-user-image:hover{
-    opacity: .5;
+    opacity: .8;
     border-radius: 50%;
     cursor: pointer;
-}
-.profile-container .image-edit-icon {
-  position: relative;
-  top: 90px;
-  left: -25px;
 }

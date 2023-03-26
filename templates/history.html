@@ -1,9 +1,8 @@
 {% extends 'base.html' %} {% block head %} <link rel="stylesheet" href={{
-url_for("static",filename='css/sidemenu.css') }} /> <link rel="stylesheet"
-href={{ url_for("static",filename='css/history.css') }} />{% endblock %} {%
+url_for("static",filename='css/sidemenu.css') }} /> {% endblock %} {%
 block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
 %}
-<center class="my-4"><h3>View History</h3></center>
+<center class="my-4"><h3>Cheque History</h3></center>
 <table class="table">
   <thead>
     <tr>
@@ -17,43 +16,18 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
     </tr>
   </thead>
   <tbody>
+    {% for cheque in chequeDetails %}
     <tr>
-      <th scope="row">1</th>
-      <td>State Bank of India</td>
-      <td>Ritik Jaiswal</td>
-      <td>50600</td>
-      <td>Yes</td>
-      <td>785623568978</td>
-      <td>23/03/2023</td>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{cheque.bank_name}}</td>
+      <td>{{cheque.bearer}}</td>
+      <td>{{cheque.amount}}</td>
+      <td>{{cheque.isvalid}}</td>
+      <td>{{cheque.cheque_no}}</td>
+      <td>{{cheque.date}}</td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>State Bank of India</td>
-      <td>Ritik Jaiswal</td>
-      <td>50600</td>
-      <td>Yes</td>
-      <td>785623568978</td>
-      <td>23/03/2023</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>State Bank of India</td>
-      <td>Ritik Jaiswal</td>
-      <td>50600</td>
-      <td>Yes</td>
-      <td>785623568978</td>
-      <td>23/03/2023</td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td>State Bank of India</td>
-      <td>Ritik Jaiswal</td>
-      <td>50600</td>
-      <td>Yes</td>
-      <td>785623568978</td>
-      <td>23/03/2023</td>
-    </tr>
+    {% endfor %}
+    
   </tbody>
 </table>
-
-{% endblock %} {% block jsscripts %} {% endblock %}
+{% endblock %} 

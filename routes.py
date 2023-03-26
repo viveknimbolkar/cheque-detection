@@ -1,12 +1,21 @@
 from __main__ import app
-from flask import render_template, redirect, render_template, request, session
+import os
+import flask
+from flask import render_template, redirect, render_template, request, session, flash, url_for
+from werkzeug.utils import secure_filename
 from database import mysql
 import MySQLdb.cursors
 
+ALLOWED_IMAGE_EXTENSIONS = set(['png','jpg','jpeg','gif'])
+
+# validate image types
+def allowed_images(imagename):
+    return '.' in imagename and imagename.rsplit('.',1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
     
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', email=session['email'])
 
 
 @app.route('/auth')
@@ -70,55 +79,81 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     if 'email' in session:
-        print('defined')
-        return render_template('dashboard.html',)
+        return render_template('dashboard.html',email=session['email'])
     else:
-        print('not defined')
         return redirect('/',)
 
 
 @app.route('/dashboard/profile')
 def profile():
     if 'email' in session:
-        print('defined')
         return render_template('profile.html',name=session['name'],email=session['email'],role=session['role'])
     else:
-        print('not defined')
         return redirect('/',)
-
 
 
 
 # get the profile information
 @app.route('/profile/update_user_details',methods=['POST'])
 def update_user_details():
-     msg = ''
-     if request.method == 'POST':
+    msg = ''
+    if request.method == 'POST':
+        if request.files['userimage'].filename != '':
+            if allowed_images(request.files['userimage'].filename):
+                filename = secure_filename(request.files['userimage'].filename)
+                request.files['userimage'].save(os.path.join(app.config['UPLOAD_USER_IMAGE_FOLDER'],filename))
+            else:
+                flash('Only png, jpg, jpeg image formats are allowed')
         email = request.form['email']
         role = request.form['role']
         name = request.form['name']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('UPDATE user SET  email =%s, name =%s, role=%s WHERE email=%s',(email,name,role,email))
+        query_with_image = 'UPDATE user SET  email =%s, name =%s, role=%s, user_image=%s WHERE email=%s'
+        query_without_image = 'UPDATE user SET  email =%s, name =%s, role=%s WHERE email=%s'
+        if request.files['userimage'].filename != '':
+            cursor.execute(query_with_image,(email,name,role,secure_filename(request.files['userimage'].filename),email))
+        else:
+            cursor.execute(query_without_image,(email,name,role,email))
         mysql.connection.commit()
-        msg = 'User data updated successfully'
-        return msg
-     else:
+        flash('User data updated successfully')
+        return redirect(flask.request.url_root+'dashboard/profile')
+    else:
         msg = 'Something went wrong'
-            
-     return msg
+    return msg
 
 
+@app.route('/get_userimage/<email>/')
+def display_userimage(email):
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT user_image FROM user WHERE email=%s ',[email])
+        account = cursor.fetchone()
+        if account and account['user_image'] != '':
+           return redirect(url_for('static',filename='uploads/'+account['user_image']))
+        else:
+            flash('Cannot upload file')
 
-@app.route('/dashboard/history')
+
+@app.route('/dashboard/history',methods=['GET'])
 def history():
-    return render_template('history.html')
+    if request.method == 'GET':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM history')
+        account = cursor.fetchall()
+        return render_template('history.html',chequeDetails=account,email=session['email'])
+
+
+@app.route('/add_cheque_data',methods=['POST'])
+def add_cheque_data():
+    if request.method == 'POST':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO `history` (`bank_name`, `bearer`, `amount`, `isvalid`, `cheque_no`) VALUES (%s, %s, %s, %s, %s)',[request.json['bankName'],request.json['bearer'],request.json['amount'],request.json['isValid'],request.json['chequeNo']])
+        mysql.connection.commit()
+        return 'Cheque details added'
 
 
 @app.route('/dashboard/extract')
 def extract():
     return 'hisstory'
-
-
 
 
 @app.route('/dashboard/upload-cheque')
