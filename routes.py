@@ -1,10 +1,16 @@
 from __main__ import app
-import os
+import os, io
 import flask
 from flask import render_template, redirect, render_template, request, session, flash, url_for
 from werkzeug.utils import secure_filename
 from database import mysql
 import MySQLdb.cursors
+from google.cloud import vision
+from google.cloud import vision_v1
+from google.cloud.vision_v1 import types
+
+# setting up google cloud vision credentials
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'GoogleCloudVisionToken.json'
 
 ALLOWED_IMAGE_EXTENSIONS = set(['png','jpg','jpeg','gif'])
 
@@ -15,7 +21,7 @@ def allowed_images(imagename):
 
 @app.route('/')
 def index():
-    return render_template('index.html', email=session['email'])
+    return render_template('index.html')
 
 
 @app.route('/auth')
@@ -151,12 +157,23 @@ def add_cheque_data():
         return 'Cheque details added'
 
 
-@app.route('/dashboard/extract')
+@app.route('/dashboard/extract',methods=['POST','GET'])
 def extract():
-    return 'hisstory'
+    if request.method == 'POST':
+        if request.files['cheque'].filename != '':
+            vision_client = vision.ImageAnnotatorClient()
+            cheque_content = request.files['cheque'].read()
+            # print(cheque_content)
+            cheque_image = vision_v1.types.Image(content=cheque_content)
+            vision_response = vision_client.text_detection(image=cheque_image)
+            extracted_text = vision_response.text_annotations
+            print(extracted_text)
+            return 'working'
+        else:
+            return 'not working'
+    elif request.method == 'GET':
+        return render_template('extract-cheque-info.html',email=session['email'])
 
 
-@app.route('/dashboard/upload-cheque')
-def upload_cheque():
-    return render_template('upload-cheque.html')
+
 

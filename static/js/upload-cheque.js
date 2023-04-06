@@ -18,6 +18,7 @@ const fileHandler = (file, name, type) => {
     let imageContainer = document.createElement("figure");
     let img = document.createElement("img");
     img.src = reader.result;
+    img.name = "cheque";
     imageContainer.appendChild(img);
     imageContainer.innerHTML += `<figcaption>${name}</figcaption>`;
     imageDisplay.appendChild(imageContainer);

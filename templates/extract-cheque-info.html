@@ -1,1 +1,74 @@
+{% extends 'base.html' %} {% block head %}
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+  rel="stylesheet"
+/>
+<!-- <link rel="stylesheet" href={{
+url_for("static",filename='css/upload-cheque.css') }} />  -->
+<link rel="stylesheet"
+href={{ url_for("static",filename='css/sidemenu.css') }} /> 
+{% endblock %} {%
+block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
+%}
+<form enctype="multipart/form-data" action="/dashboard/extract" method="post">
+    <div class="mb-3">
+        <label for="formFile" class="form-label"
+          >Default file input example</label
+        >
+        <input class="form-control" type="file" name="cheque" id="formFile" />
+      </div>
+      <div class="text-center">
+        <input
+          type="submit"
+          class="btn btn-primary text-center"
+          value="Start Processing"
+        />
+      </div>
+  <!-- <div class="container">
+    <div class="d-flex justify-content-center">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <h2 class="text-center fw-bold my-4">
+          Upload a Cheque image to extract text
+        </h2>
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+    <div class="row p-2">
+      <div class="col-md-3"></div>
+      <div class="col-md-6 main">
+        <div class="text-center mb-3">
+          <i class="fa-brands fa-dropbox"></i>
+        </div>
 
+        <input type="file" id="upload-button" multiple accept="image/*" />
+        <label for="upload-button"
+          ><i class="fa-solid fa-upload"></i>&nbsp; Upload Cheque
+        </label>
+        <div class="text-center">or Drop a file</div>
+
+        <div id="error"></div>
+        <div id="image-display" class="my-3"></div>
+        <div class="mb-3">
+          <label for="formFile" class="form-label"
+            >Default file input example</label
+          >
+          <input class="form-control" type="file" id="formFile" />
+        </div>
+        <div class="text-center">
+          <input
+            type="submit"
+            class="btn btn-primary text-center"
+            value="Start Processing"
+          />
+        </div>
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+  </div> -->
+</form>
+
+{% endblock %} {% block jsscripts %}
+<!-- <script src={{
+    url_for("static",filename='js/upload-cheque.js') }}></script> -->
+{% endblock %}
