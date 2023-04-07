@@ -5,9 +5,15 @@ from flask import render_template, redirect, render_template, request, session, 
 from werkzeug.utils import secure_filename
 from database import mysql
 import MySQLdb.cursors
-from google.cloud import vision
-from google.cloud import vision_v1
-from google.cloud.vision_v1 import types
+import sys
+sys.path.insert(0,'model/') 
+from model.data_extraction import DataExtraction
+
+print(DataExtraction.Date(self, 'https://www.researchgate.net/publication/344611419/figure/fig14/AS:945803946369051@1602508641539/Raw-scanned-image-of-a-sample-cheque.png'))
+
+# from google.cloud import vision
+# from google.cloud import vision_v1
+# from google.cloud.vision_v1 import types
 
 # setting up google cloud vision credentials
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'GoogleCloudVisionToken.json'
@@ -161,13 +167,13 @@ def add_cheque_data():
 def extract():
     if request.method == 'POST':
         if request.files['cheque'].filename != '':
-            vision_client = vision.ImageAnnotatorClient()
-            cheque_content = request.files['cheque'].read()
-            # print(cheque_content)
-            cheque_image = vision_v1.types.Image(content=cheque_content)
-            vision_response = vision_client.text_detection(image=cheque_image)
-            extracted_text = vision_response.text_annotations
-            print(extracted_text)
+            # vision_client = vision.ImageAnnotatorClient()
+            # cheque_content = request.files['cheque'].read()
+            # # print(cheque_content)
+            # cheque_image = vision_v1.types.Image(content=cheque_content)
+            # vision_response = vision_client.text_detection(image=cheque_image)
+            # extracted_text = vision_response.text_annotations
+            # print(extracted_text)
             return 'working'
         else:
             return 'not working'
