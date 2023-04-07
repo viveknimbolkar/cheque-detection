@@ -11,7 +11,7 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
       <th scope="col">Bearer</th>
       <th scope="col">Amount</th>
       <th scope="col">Is Valid</th>
-      <th scope="col">Cheque No.</th>
+      <th scope="col">Account No.</th>
       <th scope="col">Date</th>
     </tr>
   </thead>
@@ -23,7 +23,7 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
       <td>{{cheque.bearer}}</td>
       <td>{{cheque.amount}}</td>
       <td>{{cheque.isvalid}}</td>
-      <td>{{cheque.cheque_no}}</td>
+      <td>{{cheque.account_no}}</td>
       <td>{{cheque.date}}</td>
     </tr>
     {% endfor %}

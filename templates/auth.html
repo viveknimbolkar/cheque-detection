@@ -5,13 +5,16 @@
 {% block content %}
 <div class="container my-4" id="container">
   <div class="form-container sign-up-container">
-    <form action="/register" method="post">
+    <form action="/register" method="post" enctype="multipart/form-data">
       <h1>Create Account</h1>
       
       <span>or use your email for registration</span>
       <input type="text" name="name" placeholder="Name" />
       <input type="email" name="email" placeholder="Email" />
       <input type="password" name="password" placeholder="Password" />
+      <label>Upload valid signature</label>
+      <input class="form-control" type="file" name="signature" />
+      
       <button>Sign Up</button>
     </form>
   </div>

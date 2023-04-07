@@ -5,25 +5,21 @@
 />
 <!-- <link rel="stylesheet" href={{
 url_for("static",filename='css/upload-cheque.css') }} />  -->
-<link rel="stylesheet"
-href={{ url_for("static",filename='css/sidemenu.css') }} /> 
-{% endblock %} {%
-block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
-%}
+<link rel="stylesheet" href={{ url_for("static",filename='css/sidemenu.css') }}
+/> {% endblock %} {% block sidemenu%} {% include 'sidemenu.html' %} {% endblock
+%} {% block section %}
 <form enctype="multipart/form-data" action="/dashboard/extract" method="post">
-    <div class="mb-3">
-        <label for="formFile" class="form-label"
-          >Default file input example</label
-        >
-        <input class="form-control" type="file" name="cheque" id="formFile" />
-      </div>
-      <div class="text-center">
-        <input
-          type="submit"
-          class="btn btn-primary text-center"
-          value="Start Processing"
-        />
-      </div>
+  <div class="mb-3">
+    <label for="formFile" class="form-label">Upload your cheque</label>
+    <input required class="form-control" type="file" name="cheque" id="formFile" />
+  </div>
+  <div class="text-center">
+    <input
+      type="submit"
+      class="btn btn-primary text-center"
+      value="Start Processing"
+    />
+  </div>
   <!-- <div class="container">
     <div class="d-flex justify-content-center">
       <div class="col-md-3"></div>
@@ -67,8 +63,81 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
     </div>
   </div> -->
 </form>
-
-{% endblock %} {% block jsscripts %}
+{% if chequedata %}
+<div class="row">
+  <div class="col-md-4">
+    <label for="exampleFormControlInput1" class="form-label">Bearer</label>
+    <input
+      type="email"
+      class="form-control"
+      value="{{chequedata[0]}}"
+      id="exampleFormControlInput1"
+      placeholder="name@example.com"
+    />
+  </div>
+  <div class="col-md-4">
+    <label for="exampleFormControlInput1" class="form-label"
+      >Account Number</label
+    >
+    <input
+      type="email"
+      class="form-control"
+      value="{{chequedata[1]}}"
+      id="exampleFormControlInput1"
+      placeholder="name@example.com"
+    />
+  </div>
+  <div class="col-md-4">
+    <label for="exampleFormControlInput1" class="form-label"
+      >Amount In Words</label
+    >
+    <input
+      type="email"
+      class="form-control"
+      value="{{chequedata[2]}}"
+      id="exampleFormControlInput1"
+      placeholder="name@example.com"
+    />
+  </div>
+  <div class="col-md-4">
+    <label for="exampleFormControlInput1" class="form-label"
+      >Amount In Number</label
+    >
+    <input
+      type="email"
+      class="form-control"
+      value="{{chequedata[3]}}"
+      id="exampleFormControlInput1"
+      placeholder="name@example.com"
+    />
+  </div>
+  <div class="col-md-4">
+    <label for="exampleFormControlInput1" class="form-label">IFSC Code</label>
+    <input
+      type="email"
+      class="form-control"
+      value="{{chequedata[4]}}"
+      id="exampleFormControlInput1"
+      placeholder="name@example.com"
+    />
+  </div>
+  <div class="col-md-4">
+    <label for="exampleFormControlInput1" class="form-label">Date</label>
+    <input
+      type="email"
+      class="form-control"
+      value="{{chequedata[5]}}"
+      id="exampleFormControlInput1"
+      placeholder="name@example.com"
+    />
+  </div>
+</div>
+<p class="text-danger">
+  {% with messages = get_flashed_messages() %} {% if messages %} {% for
+  message in messages %} {{ message }} {% endfor %} {% endif %} {% endwith
+  %}
+</p>
+{% endif %} {% endblock %} {% block jsscripts %}
 <!-- <script src={{
     url_for("static",filename='js/upload-cheque.js') }}></script> -->
 {% endblock %}

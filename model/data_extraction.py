@@ -2,14 +2,14 @@ import os
 import cv2
 # from google.colab.patches import cv2_imshow
 import easyocr
-from matplotlib import pyplot as plt
-import numpy as np
+# from matplotlib import pyplot as plt
+# import numpy as np
 
 
 class DataExtraction:
 
-    def __init__(self):
-        image = cv2.imread("abc.jpg")
+    def __init__(self,obj):
+        image = cv2.imread(obj)
         di = {'Date': [65, 100, 850, 1100],
               'Amount_num': [190, 250, 870, 1090],
               'Amount_str': [160, 210, 235, 1600],
@@ -26,12 +26,15 @@ class DataExtraction:
             c_i = image[x:w, y:h]
             final[val] = c_i
 
-        date = self.Date(final["Date"])
-        amount_num = self.Other(final["Amount_num"])
-        amount_str = self.Other(final["Amount_str"])
-        pay = self.Other(final["Pay"])
-        acc_no = self.Other(final["Acc_no"])
-        IFSC = self.IFSC(final["IFSC"]); print(date, "\n", amount_num, "\n", amount_str, "\n", pay, "\n", acc_no, "\n", IFSC)
+        self.date = self.Date(final["Date"])
+        self.amount_num = self.Other(final["Amount_num"])
+        self.amount_str = self.Other(final["Amount_str"])
+        self.pay = self.Other(final["Pay"])
+        self.acc_no = self.Other(final["Acc_no"])
+        self.IFSC = self.IFSC(final["IFSC"])
+
+    def getDetails(self):
+        return [self.pay,self.acc_no,self.amount_str,self.amount_num,self.IFSC,self.date]
 
     def Date(self, obj):
         IMAGE_PATH = obj

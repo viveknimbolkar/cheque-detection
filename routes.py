@@ -1,4 +1,4 @@
-from __main__ import app
+from __main__ import app, get_random_account_no
 import os, io
 import flask
 from flask import render_template, redirect, render_template, request, session, flash, url_for
@@ -9,14 +9,12 @@ import sys
 sys.path.insert(0,'model/') 
 from model.data_extraction import DataExtraction
 
-print(DataExtraction.Date(self, 'https://www.researchgate.net/publication/344611419/figure/fig14/AS:945803946369051@1602508641539/Raw-scanned-image-of-a-sample-cheque.png'))
-
 # from google.cloud import vision
 # from google.cloud import vision_v1
 # from google.cloud.vision_v1 import types
 
 # setting up google cloud vision credentials
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'GoogleCloudVisionToken.json'
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'GoogleCloudVisionToken.json'
 
 ALLOWED_IMAGE_EXTENSIONS = set(['png','jpg','jpeg','gif'])
 
@@ -62,17 +60,22 @@ def login():
 @app.route('/register',methods=['POST'])
 def register():
     msg = ''
-    if request.method == 'POST' and 'email' in request.form and 'name' in request.form and 'password' in request.form:
+    if request.method == 'POST' and 'email' in request.form and 'name' in request.form and 'password' in request.form and request.files['signature'].filename != '':
         email = request.form['email']
         name = request.form['name']
         password = request.form['password']
+        random_account_number = get_random_account_no()
+        print(secure_filename(request.files['signature'].filename))
+        signaturename = secure_filename(request.files['signature'].filename)
+        request.files['signature'].save(os.path.join(app.config['UPLOAD_SIGNATURE_FOLDER'],signaturename))
+        print(signaturename)
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM user WHERE email=%s',[email])
         account = cursor.fetchone()
         if account:
             msg = 'Account already exists!'
         else:
-            cursor.execute('INSERT INTO `user` (`name`, `email`, `password`) VALUES (%s, %s, %s)',[name,email,password])
+            cursor.execute('INSERT INTO `user` (`name`, `email`, `password`,`account_no`,`signature`) VALUES (%s, %s, %s, %s, %s)',[name,email,password,random_account_number,signaturename])
             mysql.connection.commit()
             msg = 'User registered successfully!'
     else:
@@ -140,7 +143,7 @@ def display_userimage(email):
         cursor.execute('SELECT user_image FROM user WHERE email=%s ',[email])
         account = cursor.fetchone()
         if account and account['user_image'] != '':
-           return redirect(url_for('static',filename='uploads/'+account['user_image']))
+           return redirect(url_for('static',filename='uploads/user_images/'+account['user_image']))
         else:
             flash('Cannot upload file')
 
@@ -174,9 +177,22 @@ def extract():
             # vision_response = vision_client.text_detection(image=cheque_image)
             # extracted_text = vision_response.text_annotations
             # print(extracted_text)
-            return 'working'
+
+            # store cheque and send for processing
+            filename = secure_filename(request.files['cheque'].filename)
+            chequepath = os.path.join(app.config['UPLOAD_CHEQUE_FOLDER'],filename)
+            request.files['cheque'].save(chequepath)
+            de = DataExtraction(chequepath)
+            extracted_data = de.getDetails()
+            print(extracted_data)
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('INSERT INTO `history` ( `bearer`, `amount`, `amount_in_words`,`account_no`,`date`) VALUES (%s, %s, %s, %s, %s)',[extracted_data[0],extracted_data[3],extracted_data[2],extracted_data[1],extracted_data[5]])
+            mysql.connection.commit()
+            return render_template('extract-cheque-info.html',chequedata=extracted_data)
         else:
-            return 'not working'
+            return render_template('extract-cheque-info.html')
+
+
     elif request.method == 'GET':
         return render_template('extract-cheque-info.html',email=session['email'])
 
