@@ -24,7 +24,21 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
   >
     <div class="row mt-4">
       <div class="col-md-2"></div>
-      <div class="col-md-4">
+      <div class="col-md-7">
+        <div class="mb-3">
+          <label for="role" class="form-label"> Role</label>
+          <select
+            value="{{ role }}"
+            name="role"
+            id="role"
+            type="text"
+            class="form-control"
+            placeholder="Enter role..."
+          >
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </div>
         <div class="mb-3">
           <label for="email" class="form-label"> Email</label>
           <input
@@ -47,32 +61,21 @@ block sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section
             placeholder="Enter name..."
           />
         </div>
-        <input class="text-white btn btn-danger" type="submit" value="Update" />
-      </div>
-      <div class="col-md-4">
-        <div class="mb-3">
-          <label for="role" class="form-label"> Role</label>
-          <select
-            value="{{ role }}"
-            name="role"
-            id="role"
-            type="text"
-            class="form-control"
-            placeholder="Enter role..."
-          >
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-        </div>
         <div class="mb-3">
           <label for="role" class="form-label">Profile Image</label>
           <input type="file" name="userimage" class="form-control" />
         </div>
+        <input
+          class="text-white btn btn-primary"
+          type="submit"
+          value="Update"
+        />
       </div>
+      <div class="col-md-4"></div>
     </div>
   </form>
   <center>
-    <p class="text-danger">
+    <p class="text-primary">
       {% with messages = get_flashed_messages() %} {% if messages %} {% for
       message in messages %} {{ message }} {% endfor %} {% endif %} {% endwith
       %}

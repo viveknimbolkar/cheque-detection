@@ -131,7 +131,7 @@ def update_user_details():
             cursor.execute(query_without_image,(email,name,role,email))
         mysql.connection.commit()
         flash('User data updated successfully')
-        return redirect(flask.request.url_root+'dashboard/profile')
+        return redirect(flask.request.url_root+'dashboard/profile',)
     else:
         msg = 'Something went wrong'
     return msg
@@ -190,7 +190,7 @@ def extract():
             mysql.connection.commit()
             return render_template('extract-cheque-info.html',chequedata=extracted_data)
         else:
-            return render_template('extract-cheque-info.html')
+            return render_template('extract-cheque-info.html',email=session['email'])
 
 
     elif request.method == 'GET':

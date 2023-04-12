@@ -1,5 +1,12 @@
+.menu{
+  background-color: #000066;
+  height: 100%;
+}
+.menu .list-item a{
+  color: rgb(255, 255, 255);
+}
 .menu .list-item:hover {
-  background-color: rgb(228, 227, 227);
+  background-color: #0f0fb6;
 }
 .list-item .list-anchor {
   text-decoration: none;

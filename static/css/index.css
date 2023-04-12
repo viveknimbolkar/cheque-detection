@@ -1,0 +1,11 @@
+.homepage{
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.homepage-heading{
+    font-weight: 800;
+    font-size: 60px;
+    color: #040036;
+}

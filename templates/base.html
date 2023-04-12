@@ -15,21 +15,19 @@
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    {% block head %} {% endblock %}
+    <link rel="stylesheet" href={{
+    url_for("static",filename='css/base.css') }} />
+   
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    <nav class="navbar navbar-expand-lg navbar-menu">
       <div class="container-fluid">
         <a class="navbar-brand" href="/"><strong>Cheque Detection</strong></a>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             {% if not session['email'] %}
-            <li class="nav-item">
-              <a class="nav-link text-light" href="{{ url_for('auth') }}"
-                >Register</a
-              >
-            </li>
+
             <li class="nav-item">
               <a class="nav-link text-light" href="{{ url_for('auth') }}"
                 >Login</a
@@ -37,10 +35,14 @@
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link text-white" href="{{url_for('dashboard')}}">Dashboard</a>
+              <a class="nav-link text-white" href="{{url_for('dashboard')}}"
+                >Dashboard</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white" href="{{url_for('logout')}}">Logout</a>
+              <a class="nav-link text-white" href="{{url_for('logout')}}"
+                >Logout</a
+              >
             </li>
 
             {% endif %}
@@ -48,7 +50,7 @@
         </div>
       </div>
     </nav>
-    <div class="row">
+    <div class="row container-fluid">
       <div class="col-md-3">{% block sidemenu %} {% endblock %}</div>
       <div class="col-md-9">{% block section %} {% endblock %}</div>
     </div>

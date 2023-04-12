@@ -8,7 +8,7 @@ url_for("static",filename='css/upload-cheque.css') }} />  -->
 <link rel="stylesheet" href={{ url_for("static",filename='css/sidemenu.css') }}
 /> {% endblock %} {% block sidemenu%} {% include 'sidemenu.html' %} {% endblock
 %} {% block section %}
-<form enctype="multipart/form-data" action="/dashboard/extract" method="post">
+<form class="mt-4 mx-4" enctype="multipart/form-data" action="/dashboard/extract" method="post">
   <div class="mb-3">
     <label for="formFile" class="form-label">Upload your cheque</label>
     <input required class="form-control" type="file" name="cheque" id="formFile" />
