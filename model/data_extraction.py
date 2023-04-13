@@ -10,35 +10,49 @@ class DataExtraction:
 
     def __init__(self,obj):
         image = cv2.imread(obj)
-        di = {'Date': [65, 100, 850, 1100],
-              'Amount_num': [190, 250, 870, 1090],
-              'Amount_str': [160, 210, 235, 1600],
-              'Pay': [110, 180, 160, 830],
-              'Sign': [280, 370, 850, 1100],
-              'Acc_no': [250, 320, 190, 500],
-              'IFSC': [0, 130, 410, 700],
-              'Codes': [430, 500, 300, 900]
-              }
+        di = {
+              'Date': [0, 100, 1300, 1900],
+              'Amount_num': [250, 400, 1440, 1800],
+              'Amount_str': [210, 300, 280, 1800],
+              'Pay': [150, 220, 130, 1350],
+              'Signature': [400, 640, 1200, 1800],
+              'Acc_no': [400, 500, 160, 750],
+              'IFSC': [0, 150, 600, 1100],
+              'Codes': [700, 800, 300, 1400]
+            }
 
-        final = {}
+        self.final = {}
         for val in di:
             x, w, y, h = di[val]
             c_i = image[x:w, y:h]
-            final[val] = c_i
+            self.final[val] = c_i
 
-        self.date = self.Date(final["Date"])
-        self.amount_num = self.Other(final["Amount_num"])
-        self.amount_str = self.Other(final["Amount_str"])
-        self.pay = self.Other(final["Pay"])
-        self.acc_no = self.Other(final["Acc_no"])
-        self.IFSC = self.IFSC(final["IFSC"])
+        self.date = self.Date(self.final["Date"])
+        self.amount_num = self.Amount_num(self.final["Amount_num"])
+        self.amount_str = self.Other(self.final["Amount_str"])
+        self.pay = self.Other(self.final["Pay"])
+        self.acc_no = self.Other(self.final["Acc_no"])
+        self.IFSC = self.IFSC(self.final["IFSC"])
+
 
     def getDetails(self):
-        return [self.pay,self.acc_no,self.amount_str,self.amount_num,self.IFSC,self.date]
+        return [self.pay,self.acc_no,self.amount_str,self.amount_num,self.IFSC,self.date,self.final['Signature']]
+
+    def Amount_num(self,obj):
+        IMAGE_PATH = obj
+        reader = easyocr.Reader(['en'])
+        result = reader.readtext(IMAGE_PATH)
+        val = result[0][1]
+        temp = ''
+        li = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        for v in val:
+            if v in li:
+                temp += v
+        return temp
+
 
     def Date(self, obj):
         IMAGE_PATH = obj
-
         image = IMAGE_PATH
         result = image.copy()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -73,15 +87,12 @@ class DataExtraction:
 
     def IFSC(self, obj):
         IMAGE_PATH = obj
-
         reader = easyocr.Reader(['en'])
-        result = reader.readtext(IMAGE_PATH)
-        val = result[4][1]
-        return val
+        result = reader.readtext(IMAGE_PATH)[-1][1].split(' ')[-1]
+        return result
 
     def Other(self, obj):
         IMAGE_PATH = obj
-
         reader = easyocr.Reader(['en'])
         result = reader.readtext(IMAGE_PATH)
         val = result[0][1]

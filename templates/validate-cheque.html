@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block head %}
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+  rel="stylesheet"
+/>
+<!-- <link rel="stylesheet" href={{
+url_for("static",filename='css/upload-cheque.css') }} />  -->
+<link rel="stylesheet" href={{ url_for("static",filename='css/sidemenu.css') }}
+/> {% endblock %} {% block sidemenu%} {% include 'sidemenu.html' %} {% endblock
+%} {% block section %}
+<form
+  class="mt-4 mx-4"
+  enctype="multipart/form-data"
+  action="/dashboard/validate-cheque"
+  method="post"
+>
+  <div class="mb-3">
+    <label for="formFile" class="form-label">Upload your cheque</label>
+    <input
+      required
+      class="form-control"
+      type="file"
+      name="cheque"
+      id="formFile"
+    />
+  </div>
+  <div class="text-center">
+    <input
+      type="submit"
+      class="btn btn-primary text-center"
+      value="Verify Cheque"
+    />
+  </div>
+  <p class="text-primary">
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for
+    message in messages %} {{ message }} {% endfor %} {% endif %} {% endwith %}
+  </p>
+  {% endblock %}
+</form>

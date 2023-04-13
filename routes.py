@@ -1,13 +1,13 @@
 from __main__ import app, get_random_account_no
 import os, io
 import flask
+import cv2
 from flask import render_template, redirect, render_template, request, session, flash, url_for
 from werkzeug.utils import secure_filename
 from database import mysql
-import MySQLdb.cursors
-import sys
-sys.path.insert(0,'model/') 
+import MySQLdb.cursors 
 from model.data_extraction import DataExtraction
+from model.signature_verification import VerifySignature
 
 # from google.cloud import vision
 # from google.cloud import vision_v1
@@ -188,7 +188,7 @@ def extract():
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO `history` ( `bearer`, `amount`, `amount_in_words`,`account_no`,`date`) VALUES (%s, %s, %s, %s, %s)',[extracted_data[0],extracted_data[3],extracted_data[2],extracted_data[1],extracted_data[5]])
             mysql.connection.commit()
-            return render_template('extract-cheque-info.html',chequedata=extracted_data)
+            return render_template('extract-cheque-info.html',email=session['email'],chequedata=extracted_data)
         else:
             return render_template('extract-cheque-info.html',email=session['email'])
 
@@ -197,5 +197,34 @@ def extract():
         return render_template('extract-cheque-info.html',email=session['email'])
 
 
+@app.route('/dashboard/validate-cheque',methods=['POST','GET'])
+def validate_cheque():
+    if request.method == 'POST':
+        if request.files['cheque'].filename != '':
+            chequepath = os.path.join(app.config['UPLOAD_CHEQUE_FOLDER'],request.files['cheque'].filename)
+            data_extraction_instance = DataExtraction(chequepath)
+            extracted_account_no = data_extraction_instance.getDetails()
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT signature FROM customer WHERE account_no=%s ',[extracted_account_no[1]])
+            customer_signature_name = cursor.fetchone()
+            if customer_signature_name:
+                customer_signature_path = os.path.join(app.config['UPLOAD_SIGNATURE_FOLDER'],customer_signature_name['signature'])
+                print(customer_signature_path)
+                customer_img_instance = cv2.imread(customer_signature_path)
+                cheque_signature = extracted_account_no[-1]
+                signature_verification_instance = VerifySignature(customer_img_instance,cheque_signature)
+                print(signature_verification_instance.find())
+            else:
+               print('not getting ')
+
+            return render_template('validate-cheque.html',email=session['email'])
+
+        else:
+            flash('Cheque not provided')
+            return render_template('validate-cheque.html',email=session['email'])
+
+
+    elif request.method == 'GET':
+        return render_template('validate-cheque.html',email=session['email'])
 
 
