@@ -1,19 +1,27 @@
-{% extends 'base.html' %}
-{% block head %} <link rel="stylesheet" href={{ url_for("static",filename='css/index.css') }} /> {% endblock %} 
-
-{% block content %}
+{% extends 'base.html' %} {% block head %} <link rel="stylesheet" href={{
+url_for("static",filename='css/index.css') }} /> {% endblock %} {% block content
+%}
 <div class="homepage container-fluid">
   <div class="row">
     <div class="col-md-6">
-      <h1 class="homepage-heading font-bold">Next generation Cheque Processing System</h1>
+      <h1 class="homepage-heading font-bold">
+        Next generation Cheque Processing System
+      </h1>
       <p class="homepage-details text-secondary">
         Take your financial life online. Your easy bank acocunt will be a
         one-stop-shop for spendiing, saving budgeting, investing, and much more.
       </p>
-      <button class="homepage-invite-btn btn btn-primary btn-rounded text-white">Start Processing</button>
+      <a href="/auth">
+        <button
+          class="homepage-invite-btn btn btn-primary btn-rounded text-white"
+        >
+          Start Processing
+        </button>
+      </a>
     </div>
     <div class="d-flex align-items-center justify-content-center col-md-6">
-        <img width="400px" height="400px" alt="Welcome image" src={{ url_for("static",filename='images/welcome.gif')}} />
+      <img width="400px" height="400px" alt="Welcome image" src={{
+      url_for("static",filename='images/welcome.gif')}} />
     </div>
   </div>
 </div>
