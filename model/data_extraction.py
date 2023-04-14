@@ -1,9 +1,6 @@
 import os
 import cv2
-# from google.colab.patches import cv2_imshow
 import easyocr
-# from matplotlib import pyplot as plt
-# import numpy as np
 
 
 class DataExtraction:

@@ -1,7 +1,5 @@
 import cv2
 
-print(cv2.__version__)
-
 class MyImage:
     def __init__(self, img_name, optional=0):
         self.img = img_name

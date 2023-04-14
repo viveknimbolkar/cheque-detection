@@ -204,7 +204,6 @@ def validate_cheque():
             chequepath = os.path.join(app.config['UPLOAD_CHEQUE_FOLDER'],request.files['cheque'].filename)
             data_extraction_instance = DataExtraction(chequepath)
             extracted_account_no = data_extraction_instance.getDetails()
-            print(extracted_account_no)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT signature FROM customer WHERE account_no=%s ',[extracted_account_no[1]])
             customer_signature_name = cursor.fetchone()
@@ -217,7 +216,6 @@ def validate_cheque():
                 is_signature_valid = signature_verification_instance.find()
 
                 if is_signature_valid:
-                    print('valid signature')
                     cursor.execute('INSERT INTO `valid_cheque` ( `name`, `account_no`, `amount`,`ifsc`,`date`, `amount_in_words`) VALUES (%s, %s, %s, %s, %s, %s)',[extracted_account_no[0],extracted_account_no[1],extracted_account_no[3],extracted_account_no[4],extracted_account_no[5],extracted_account_no[2]])
                     mysql.connection.commit()
                     flash('verified')
@@ -226,7 +224,6 @@ def validate_cheque():
                         'output':"Your cheque is verified successfully",
                         'status':'true'
                     })
-                    # return render_template('validate-cheque.html',email=session['email'])
  
                 else:
                     print('invalid signature')
@@ -243,8 +240,10 @@ def validate_cheque():
                     })
 
         else:
-            flash('Cheque not provided')
-            return render_template('validate-cheque.html',email=session['email'])
+            return jsonify({
+                        'output':"Cheque not provided",
+                        'status':'false'
+                    })
 
 
     elif request.method == 'GET':
