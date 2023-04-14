@@ -1,0 +1,6 @@
+#loader h5{
+    z-index: 100;
+}
+#loader img{
+    margin-top: -50px;
+}

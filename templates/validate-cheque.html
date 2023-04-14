@@ -3,37 +3,39 @@
   href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
   rel="stylesheet"
 />
-<!-- <link rel="stylesheet" href={{
-url_for("static",filename='css/upload-cheque.css') }} />  -->
+
+<link rel="stylesheet" href={{ url_for("static",filename='css/validate-cheque.css') }} />
 <link rel="stylesheet" href={{ url_for("static",filename='css/sidemenu.css') }}
 /> {% endblock %} {% block sidemenu%} {% include 'sidemenu.html' %} {% endblock
 %} {% block section %}
-<form
-  class="mt-4 mx-4"
-  enctype="multipart/form-data"
-  action="/dashboard/validate-cheque"
-  method="post"
->
-  <div class="mb-3">
+<div class="m-4 d-flex justify-content-center">
+  <img width="400px" id="previewImg"  />
+</div>
+  <div class="m-4">
     <label for="formFile" class="form-label">Upload your cheque</label>
     <input
-      required
+    onchange="previewFile(this)"
       class="form-control"
       type="file"
       name="cheque"
-      id="formFile"
+      id="chequeImage"
     />
   </div>
   <div class="text-center">
     <input
+    id="submitCheque"
       type="submit"
       class="btn btn-primary text-center"
       value="Verify Cheque"
     />
   </div>
-  <p class="text-primary">
-    {% with messages = get_flashed_messages() %} {% if messages %} {% for
-    message in messages %} {{ message }} {% endfor %} {% endif %} {% endwith %}
-  </p>
+
+  <div id="loader" class="mt-4 d-flex flex-column align-items-center">
+    <h5>Hold on, your check is processing...</h5>
+    <img width="300px"  src="{{url_for('static',filename='images/loading.gif')}}" />
+  </div>
   {% endblock %}
-</form>
+  {% block jsscripts %}
+    <script src={{
+      url_for("static",filename='js/validate-cheque.js') }}></script>
+  {% endblock %}

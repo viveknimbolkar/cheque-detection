@@ -1,5 +1,6 @@
 import cv2
 
+print(cv2.__version__)
 
 class MyImage:
     def __init__(self, img_name, optional=0):
@@ -28,7 +29,7 @@ class VerifySignature:
         # ==================================================================
 
         # Initiate SIFT detector
-        sift = cv2.xfeatures2d.SIFT_create()
+        sift = cv2.SIFT_create()
 
         # find the keypoints and descriptors with SIFT
         kp1, des1 = sift.detectAndCompute(self.img1.img, None)

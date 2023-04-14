@@ -2,7 +2,7 @@ from __main__ import app, get_random_account_no
 import os, io
 import flask
 import cv2
-from flask import render_template, redirect, render_template, request, session, flash, url_for
+from flask import render_template, redirect, jsonify, render_template, request, session, flash, url_for
 from werkzeug.utils import secure_filename
 from database import mysql
 import MySQLdb.cursors 
@@ -152,7 +152,7 @@ def display_userimage(email):
 def history():
     if request.method == 'GET':
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM history')
+        cursor.execute('SELECT * FROM `valid_cheque`')
         account = cursor.fetchall()
         return render_template('history.html',chequeDetails=account,email=session['email'])
 
@@ -204,20 +204,43 @@ def validate_cheque():
             chequepath = os.path.join(app.config['UPLOAD_CHEQUE_FOLDER'],request.files['cheque'].filename)
             data_extraction_instance = DataExtraction(chequepath)
             extracted_account_no = data_extraction_instance.getDetails()
+            print(extracted_account_no)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT signature FROM customer WHERE account_no=%s ',[extracted_account_no[1]])
             customer_signature_name = cursor.fetchone()
+           
             if customer_signature_name:
                 customer_signature_path = os.path.join(app.config['UPLOAD_SIGNATURE_FOLDER'],customer_signature_name['signature'])
-                print(customer_signature_path)
                 customer_img_instance = cv2.imread(customer_signature_path)
                 cheque_signature = extracted_account_no[-1]
                 signature_verification_instance = VerifySignature(customer_img_instance,cheque_signature)
-                print(signature_verification_instance.find())
+                is_signature_valid = signature_verification_instance.find()
+
+                if is_signature_valid:
+                    print('valid signature')
+                    cursor.execute('INSERT INTO `valid_cheque` ( `name`, `account_no`, `amount`,`ifsc`,`date`, `amount_in_words`) VALUES (%s, %s, %s, %s, %s, %s)',[extracted_account_no[0],extracted_account_no[1],extracted_account_no[3],extracted_account_no[4],extracted_account_no[5],extracted_account_no[2]])
+                    mysql.connection.commit()
+                    flash('verified')
+
+                    return jsonify({
+                        'output':"Your cheque is verified successfully",
+                        'status':'true'
+                    })
+                    # return render_template('validate-cheque.html',email=session['email'])
+ 
+                else:
+                    print('invalid signature')
+                    return jsonify({
+                        'output':"Cheque is not verified",
+                        'status':'false'
+                    })
+
             else:
                print('not getting ')
-
-            return render_template('validate-cheque.html',email=session['email'])
+               return jsonify({
+                        'output':"This customer does not exists.",
+                        'status':'false'
+                    })
 
         else:
             flash('Cheque not provided')
