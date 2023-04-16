@@ -5,7 +5,7 @@ import easyocr
 
 class DataExtraction:
 
-    def __init__(self,obj):
+    def __init__(self, obj):
         image = cv2.imread(obj)
         di = {
               'Date': [0, 100, 1300, 1900],
@@ -31,11 +31,10 @@ class DataExtraction:
         self.acc_no = self.Other(self.final["Acc_no"])
         self.IFSC = self.IFSC(self.final["IFSC"])
 
-
     def getDetails(self):
-        return [self.pay,self.acc_no,self.amount_str,self.amount_num,self.IFSC,self.date,self.final['Signature']]
+        return [self.pay, self.acc_no, self.amount_str, self.amount_num, self.IFSC, self.date, self.final['Signature']]
 
-    def Amount_num(self,obj):
+    def Amount_num(self, obj):
         IMAGE_PATH = obj
         reader = easyocr.Reader(['en'])
         result = reader.readtext(IMAGE_PATH)
@@ -46,7 +45,6 @@ class DataExtraction:
             if v in li:
                 temp += v
         return temp
-
 
     def Date(self, obj):
         IMAGE_PATH = obj
@@ -94,7 +92,3 @@ class DataExtraction:
         result = reader.readtext(IMAGE_PATH)
         val = result[0][1]
         return val
-
-
-if __name__ == '__main__':
-    out = DataExtraction()
