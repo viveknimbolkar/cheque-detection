@@ -41,7 +41,7 @@ class VerifySignature:
         good = []
         good_without_list = []
         for m, n in matches:
-            if m.distance < 0.70 * n.distance:
+            if m.distance < 0.65 * n.distance:
                 good.append([m])
                 good_without_list.append(m)
 

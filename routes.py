@@ -30,6 +30,8 @@ def index():
 
 @app.route('/auth')
 def auth():
+    if session.get('email') !=  None:
+        return redirect('/dashboard')
     return render_template('auth.html')
 
 
@@ -151,6 +153,8 @@ def display_userimage(email):
 @app.route('/dashboard/history',methods=['GET'])
 def history():
     if request.method == 'GET':
+        if session.get('email') ==  None:
+            return redirect('/auth')
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM `valid_cheque`')
         account = cursor.fetchall()
@@ -186,7 +190,7 @@ def extract():
             extracted_data = de.getDetails()
             print(extracted_data)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO `history` ( `bearer`, `amount`, `amount_in_words`,`account_no`,`date`) VALUES (%s, %s, %s, %s, %s)',[extracted_data[0],extracted_data[3],extracted_data[2],extracted_data[1],extracted_data[5]])
+            cursor.execute('INSERT INTO `history` ( `bearer`, `amount`, `amount_in_words`,`account_no`,`date`,`bank_name`) VALUES (%s, %s, %s, %s,%s, %s)',[extracted_data[0],extracted_data[3],extracted_data[2],extracted_data[1],extracted_data[5],'SBI'])
             mysql.connection.commit()
             return render_template('extract-cheque-info.html',email=session['email'],chequedata=extracted_data)
         else:
@@ -247,6 +251,9 @@ def validate_cheque():
 
 
     elif request.method == 'GET':
-        return render_template('validate-cheque.html',email=session['email'])
+        if session.get('email') ==  None:
+            return redirect('/auth')
+        else:
+            return render_template('validate-cheque.html',email=session['email'])
 
 
