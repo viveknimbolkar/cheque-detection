@@ -94,7 +94,3 @@ class DataExtraction:
         result = reader.readtext(IMAGE_PATH)
         val = result[0][1]
         return val
-
-
-if __name__ == '__main__':
-    out = DataExtraction()

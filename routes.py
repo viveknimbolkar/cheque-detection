@@ -190,7 +190,7 @@ def extract():
             extracted_data = de.getDetails()
             print(extracted_data)
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO `history` ( `bearer`, `amount`, `amount_in_words`,`account_no`,`date`,`bank_name`) VALUES (%s, %s, %s, %s,%s, %s)',[extracted_data[0],extracted_data[3],extracted_data[2],extracted_data[1],extracted_data[5],'SBI'])
+            cursor.execute('INSERT INTO `history` ( `bearer`, `amount`, `amount_in_words`,`account_no`,`date`) VALUES (%s, %s, %s,%s, %s)',[extracted_data[0],extracted_data[3],extracted_data[2],extracted_data[1],extracted_data[5]])
             mysql.connection.commit()
             return render_template('extract-cheque-info.html',email=session['email'],chequedata=extracted_data)
         else:
@@ -220,9 +220,8 @@ def validate_cheque():
                 is_signature_valid = signature_verification_instance.find()
 
                 if is_signature_valid:
-                    cursor.execute('INSERT INTO `valid_cheque` ( `name`, `account_no`, `amount`,`ifsc`,`date`, `amount_in_words`) VALUES (%s, %s, %s, %s, %s, %s)',[extracted_account_no[0],extracted_account_no[1],extracted_account_no[3],extracted_account_no[4],extracted_account_no[5],extracted_account_no[2]])
+                    cursor.execute('INSERT INTO `valid_cheque` ( `name`, `account_no`, `amount`,`ifsc`,`date`, `amount_in_words`,`bank_name`) VALUES (%s,%s, %s, %s, %s, %s, %s)',[extracted_account_no[0],extracted_account_no[1],extracted_account_no[3],extracted_account_no[4],extracted_account_no[5],extracted_account_no[2],'SBI'])
                     mysql.connection.commit()
-                    flash('verified')
 
                     return jsonify({
                         'output':"Your cheque is verified successfully",

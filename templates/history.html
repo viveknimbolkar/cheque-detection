@@ -14,6 +14,7 @@ sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section %}
       <th scope="col">Date</th>
       <th scope="col">Validated On</th>
       <th scope="col">Amount in words</th>
+      <th scope="col">Bank Name</th>
     </tr>
   </thead>
   <tbody>
@@ -27,6 +28,7 @@ sidemenu%} {% include 'sidemenu.html' %} {% endblock %} {% block section %}
       <td>{{cheque.date}}</td>
       <td>{{cheque.validated_on}}</td>
       <td>{{cheque.amount_in_words}}</td>
+      <td>{{cheque.bank_name}}</td>
     </tr>
     {% endfor %}
   </tbody>
